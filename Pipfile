@@ -6,9 +6,10 @@ name = "pypi"
 [packages]
 django = "~=2.2"
 psycopg2 = "==2.8.6"
-flake8 = "~=3.8"
+faker = "~=5.3"
 
 [dev-packages]
+flake8 = "~=3.8"
 
 [requires]
 python_version = "3.7"
