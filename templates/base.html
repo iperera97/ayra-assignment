@@ -7,12 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Marks Charts</title>
     <link rel="stylesheet" href="{% static 'vendors/bootstrap/bootstrap.min.css' %}" />
-</head>
-<body>
-    
-    {% block main_content %}{% endblock main_content %}
-
     <script src="{% static 'vendors/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendors/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static 'vendors/highchart/highchart.min.js' %}"></script>
+</head>
+<body>
+    {% include 'layouts/header.html' %}
+
+    {% block main_content %}{% endblock main_content %}
 </body>
 </html>

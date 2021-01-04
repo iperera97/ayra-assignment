@@ -1,0 +1,30 @@
+{% if filter_form %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <form id="filter_form">
+            <div class="row">
+                <div class="col-sm-2"></div>
+
+                {% for field in filter_form %}
+                    <div class="col-sm-2">{{field}}</div>
+                {% endfor %}
+
+                <div class="col-sm-2"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+$(document).ready(function(){
+
+var filter_form = $("#filter_form")
+filter_form.find("select").addClass("form-control")
+
+})
+</script>
+
+{% endif %}

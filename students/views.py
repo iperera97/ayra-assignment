@@ -55,7 +55,7 @@ class ColumnChartView(View):
         # add marks
         for d in avg_queryset:
             subject = d["subject"]
-            chart_data[subject]['avg'] = d["avg"]
+            chart_data[subject]['avg'] = round(d["avg"], 2)
 
         # format data
         for key, data in chart_data.items():
@@ -79,3 +79,8 @@ class ChartsTemplateView(generic.TemplateView):
             raise Http404()
 
         return [self.templates[type_of]]
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filter_form"] = StudentMarkFilter().form
+        return context
