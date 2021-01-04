@@ -1,32 +1,28 @@
 import random
-from cProfile import Profile
 
 from django.core.management.base import BaseCommand
 
-from faker import Faker
-
 from students.models import StudentMark
+from students import constants
 
 
 class Command(BaseCommand):
 
     help = 'add student records to the database'
-    student_ids = list(range(100, 120))
+    students_data = dict(constants.STUDENTS_DATA)
+    student_ids = students_data.keys()
     grades = list(range(1, 13))
     years = list(range(2010, 2020))
     marks = list(range(0, 101))
     subjects = ["maths", "english", "science", "accounting", "art", "it"]
     semesters = [1, 2]
-    total_records = 10_000_000
+    total_records = 10_000
     records_for_each_student = total_records // len(student_ids)
-    max_objects_per_query = 100_000
-    faker = Faker()
+    max_objects_per_query = 100_0
 
     def handle(self, *args, **options):
         """ entry point of the command """
-        profiler = Profile()
-        profiler.runcall(self._store_data, *args, **options)
-        profiler.print_stats()
+        self._store_data()
 
     def _store_data(self, *args, **options):
         """ create student mark objects in database """
@@ -38,6 +34,8 @@ class Command(BaseCommand):
                     StudentMark.objects.bulk_create(student_objects)
             except StopIteration:
                 pass
+
+        self.stdout.write(self.style.SUCCESS(f'{self.total_records} records added'))  # noqa
 
     def _get_objects(self, student_id):
         """ get student objects
@@ -54,7 +52,7 @@ class Command(BaseCommand):
         for n in range(self.records_for_each_student):
             s_obj = StudentMark(
                 student_id=student_id,
-                student_name=self.faker.name(),
+                student_name=self.students_data[student_id],
                 grade=random.choice(self.grades),
                 subject=random.choice(self.subjects),
                 year=random.choice(self.years),
