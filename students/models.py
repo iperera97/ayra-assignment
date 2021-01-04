@@ -9,7 +9,7 @@ class StudentMark(models.Model):
     subject = models.CharField(max_length=64)
     year = models.PositiveSmallIntegerField()
     semester = models.PositiveSmallIntegerField()
-    mark = models.CharField(max_length=16)
+    mark = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return f"#{self.student_id} mark"

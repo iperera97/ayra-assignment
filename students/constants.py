@@ -26,3 +26,7 @@ SUBJECTS = (
     'it', 'science', 'statistics',
     'accounting', 'economics'
 )
+
+GRADES = tuple(range(1, 13))
+
+YEARS = tuple(range(2010, 2020))
