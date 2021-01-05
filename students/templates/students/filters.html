@@ -7,7 +7,10 @@
                 <div class="col-sm-2"></div>
 
                 {% for field in filter_form %}
-                    <div class="col-sm-2">{{field}}</div>
+                    <div class="col-sm-2">
+                        <p class="mb-0 text-center">{{field.label}}</p>
+                        {{field}}
+                    </div>
                 {% endfor %}
 
                 <div class="col-sm-2"></div>

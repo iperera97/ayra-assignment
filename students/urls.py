@@ -17,4 +17,9 @@ urlpatterns = [
         views.ColumnChartView.as_view(),
         name="columns_chart"
     ),
+    path(
+        'charts/progress/data',
+        views.ProgressChartView.as_view(),
+        name="columns_chart"
+    ),
 ]

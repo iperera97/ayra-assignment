@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+
+{% block main_content %}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <form id="filter_form">
+                <div class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+                        <p class="mb-0 text-center">Student id</p>
+                        {{filter_form.student_id}}
+                    </div>
+                    <div class="col-sm-4"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var filter_form = $("#filter_form")
+            filter_form.find("select").addClass("form-control")
+
+        })
+    </script>
+
+
+    <div class="row">
+        <div class="col-sm-12 mt-2">
+            <figure class="highcharts-figure">
+                <div id="chart"></div>
+            </figure>
+        </div>
+    </div>
+</div>
+
+<script>
+    var filter_form = $("#filter_form")
+    var chart_obj = null;
+    var filter_endpoint = "/students/charts/progress/data"
+
+    init_chart()
+
+    function init_chart() {
+        var first_option = filter_form.find("#id_student_id option:eq(1)")
+        var default_sid = first_option.val()
+        first_option.attr("selected", "selected")
+
+        var endpoint = filter_endpoint + "?student_id=" + default_sid
+        $.get(endpoint).done(function (data) {
+            chart_obj = Highcharts.chart('chart', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Student progress over the years'
+                },
+                xAxis: {
+                    categories: data.semesters,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Marks (0 - 100)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: data.marks
+            });
+
+        })
+
+    }
+
+    filter_form.find("select").change(function () {
+        if (chart_obj == null) return false
+
+        var select_box = $(this)
+        var select_value = select_box.val()
+        var query_parms = filter_form.serialize()
+
+        var endpoint = filter_endpoint + "?" + query_parms
+
+        $.get(endpoint).done(function (data) {
+            data.marks.forEach(function (mark, index) {
+                chart_obj.series[index].setData(mark.data)
+                chart_obj.series[index].update({ name: mark.name }, false);
+            })
+        })
+    })
+
+
+
+
+</script>
+
+{% endblock main_content %}

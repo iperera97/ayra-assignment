@@ -66,10 +66,59 @@ class ColumnChartView(View):
         return subjects, values, avg
 
 
+class ProgressChartView(View):
+
+    def get(self, request, *args, **kwargs):
+        main_query = self.get_queryset()
+        main_query = self.filter_queryset(main_query)
+        marks, semesters = self.format_data(main_query)
+
+        return JsonResponse({
+            "marks": marks,
+            "semesters": semesters
+        })
+
+    def get_queryset(self):
+        queryset = StudentMark.objects.values('year', 'semester', 'subject')
+        queryset = queryset.annotate(value=Max('mark'))
+        return queryset.order_by("year", 'semester')
+
+    def filter_queryset(self, queryset):
+        return StudentMarkFilter(
+            data=self.request.GET,
+            queryset=queryset
+        ).qs
+
+    def format_data(self, queryset):
+        subject_marks = {}
+        semesters = []
+
+        for d in queryset:
+            subject = d["subject"]
+            mark = d["value"]
+            sem = d["semester"]
+            year = d["year"]
+            year_with_sem = f"{year}-{sem}"
+
+            if year_with_sem not in semesters:
+                semesters.append(year_with_sem)
+
+            if subject not in subject_marks:
+                subject_marks[subject] = []
+
+            subject_marks[subject].append(mark)
+
+        return (
+            [{"name": k, "data": v} for k, v in subject_marks.items()],
+            semesters
+        )
+
+
 class ChartsTemplateView(generic.TemplateView):
 
     templates = {
-        "column-chart": "students/column_chart.html"
+        "column-chart": "students/column_chart.html",
+        'progress': "students/progress.html"
     }
 
     def get_template_names(self):
