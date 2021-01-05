@@ -35,7 +35,7 @@ add students data to the database
 python manage.py add_student_data
 ```
 
-run development server
+run development server on port 8000
 ```
-python manage.py runserver
+python manage.py runserver 8000
 ```
