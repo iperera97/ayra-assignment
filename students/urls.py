@@ -13,13 +13,13 @@ urlpatterns = [
     ),
 
     path(
-        'charts/column-chart/data',
-        views.ColumnChartView.as_view(),
-        name="columns_chart"
+        'charts/subject-marks/data',
+        views.SubjectMarksView.as_view(),
+        name="subject_marks"
     ),
     path(
-        'charts/progress/data',
-        views.ProgressChartView.as_view(),
-        name="columns_chart"
+        'charts/subject-progress/data',
+        views.SubjectProgressChartView.as_view(),
+        name="subject_progress"
     ),
 ]

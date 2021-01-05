@@ -6,9 +6,11 @@ from .models import StudentMark
 from .filters import StudentMarkFilter
 
 
-class ColumnChartView(View):
+class SubjectMarksView(View):
 
     def get(self, request, *args, **kwargs):
+        """ get student marks for each subject """
+
         main_query = self.get_queryset()
         main_query = self.filter_queryset(main_query)
         avg_queryset = self.get_avg_queryset()
@@ -66,9 +68,11 @@ class ColumnChartView(View):
         return subjects, values, avg
 
 
-class ProgressChartView(View):
+class SubjectProgressChartView(View):
 
     def get(self, request, *args, **kwargs):
+        """ get student marks for all the years """
+
         main_query = self.get_queryset()
         main_query = self.filter_queryset(main_query)
         marks, semesters = self.format_data(main_query)
@@ -117,8 +121,8 @@ class ProgressChartView(View):
 class ChartsTemplateView(generic.TemplateView):
 
     templates = {
-        "column-chart": "students/column_chart.html",
-        'progress': "students/progress.html"
+        "subject-marks": "students/column_chart.html",
+        'subject-progress': "students/progress.html"
     }
 
     def get_template_names(self):

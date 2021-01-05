@@ -1,4 +1,5 @@
 import random
+import time
 
 from django.core.management.base import BaseCommand
 
@@ -25,13 +26,15 @@ class Command(BaseCommand):
 
         for s_id in self.student_ids:
             self.stdout.write(self.style.SUCCESS(f'starting for {s_id}'))
+
             try:
                 data_generator = self._get_objects(s_id)
                 while True:
                     student_objects = next(data_generator)
                     StudentMark.objects.bulk_create(student_objects)
             except StopIteration:
-                self.stdout.write(self.style.SUCCESS(f'records added for {s_id}'))  # noqa
+                self.stdout.write(self.style.SUCCESS(f'records added {s_id}'))
+                time.sleep(1)
 
         self.stdout.write(self.style.SUCCESS(f'{self.total_records} records added'))  # noqa
 
