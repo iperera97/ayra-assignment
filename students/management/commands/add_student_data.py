@@ -16,24 +16,22 @@ class Command(BaseCommand):
     marks = list(range(0, 101))
     subjects = ["maths", "english", "science", "accounting", "art", "it"]
     semesters = [1, 2]
-    total_records = 10_000
+    total_records = 10_000_000
     records_for_each_student = total_records // len(student_ids)
-    max_objects_per_query = 100_0
+    max_objects_per_query = 10_000
 
     def handle(self, *args, **options):
-        """ entry point of the command """
-        self._store_data()
-
-    def _store_data(self, *args, **options):
         """ create student mark objects in database """
+
         for s_id in self.student_ids:
+            self.stdout.write(self.style.SUCCESS(f'starting for {s_id}'))
             try:
                 data_generator = self._get_objects(s_id)
                 while True:
                     student_objects = next(data_generator)
                     StudentMark.objects.bulk_create(student_objects)
             except StopIteration:
-                pass
+                self.stdout.write(self.style.SUCCESS(f'records added for {s_id}'))  # noqa
 
         self.stdout.write(self.style.SUCCESS(f'{self.total_records} records added'))  # noqa
 
